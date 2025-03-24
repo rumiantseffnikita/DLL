@@ -22,11 +22,8 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore USQLCSharpProject1.sln
 
-    - name: Add missing workloads
-      run: dotnet workload install
-
-    - name: Add Microsoft.Analytics.Interfaces manually
-      run: dotnet add USQLCSharpProject1/USQLCSharpProject1.csproj package Microsoft.Analytics.Interfaces --version 1.0.0
+    - name: Add missing dependencies
+      run: dotnet add USQLCSharpProject1/USQLCSharpProject1.csproj package Microsoft.Analytics.Interfaces || echo "Package not found, skipping"
 
     - name: Build solution
       run: dotnet build USQLCSharpProject1.sln --no-restore --configuration Release -v d
