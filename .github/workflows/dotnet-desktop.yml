@@ -21,7 +21,7 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore ColorSolution.sln
+      run: dotnet restore USQLCSharpProject1.sln
 
     - name: Build solution
       run: dotnet build USQLCSharpProject1.sln --no-restore --configuration Release
