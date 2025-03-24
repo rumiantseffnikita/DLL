@@ -2,10 +2,11 @@ name: .NET Desktop Build and Test
 
 on:
   push:
-    branches: [ master ]
+    branches: 
+      -main
   pull_request:
-    branches: [ master ]
-
+    branches: 
+      -main
 jobs:
   build:
     runs-on: windows-latest
@@ -27,3 +28,4 @@ jobs:
 
     - name: Run tests
       run: dotnet test USQLCSharpProject1.sln --no-build --configuration Release --verbosity normal
+      
