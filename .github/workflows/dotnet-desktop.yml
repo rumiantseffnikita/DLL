@@ -1,31 +1,34 @@
-name: .NET Desktop Build and Test
+name: .NET Framework Build & Test
 
 on:
   push:
-    branches: 
-      [main]
+    branches:
+      - main
   pull_request:
-    branches: 
-      [main]
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 8.0.x
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
 
-    - name: Restore dependencies
-      run: dotnet restore USQLCSharpProject1.sln
+      - name: Restore NuGet packages
+        run: nuget restore
 
-    - name: Build solution
-      run: dotnet build USQLCSharpProject1.sln --no-restore --configuration Release
+      - name: Build project
+        run: msbuild /p:Configuration=Release
 
-    - name: Run tests
-      run: dotnet test USQLCSharpProject1.sln --no-build --configuration Release --verbosity normal
-      
+      - name: Run tests
+        run: |
+          $vswhere = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vstestPath = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools -property installationPath
+          $vstestConsole = "$vstestPath\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+          & $vstestConsole **\*.Tests.dll
+        shell: pwsh
