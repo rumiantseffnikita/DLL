@@ -26,4 +26,9 @@ jobs:
         run: msbuild /p:Configuration=Release
 
       - name: Run tests
-        run: vstest.console.exe **\*.Tests.dll
+        run: |
+          $vswhere = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vstestPath = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools -property installationPath
+          $vstestConsole = "$vstestPath\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+          & $vstestConsole **\*.Tests.dll
+        shell: pwsh
